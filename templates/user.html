@@ -1,0 +1,114 @@
+{% extends "layout.html" %} {% block title %} {{username}} {% endblock %} {%
+block main %}
+<div class="users-data">
+  <p>Username: <a href="/user/{{username}}">{{username}}</a></p>
+  <p>
+    <a href="/user/{{username}}/friends"
+      >{{user_data["friend_count"]}} Friends</a
+    >
+  </p>
+  {% if not isFriends and not isSelf %}
+  <form
+    method="POST"
+    action="{{ url_for('send_friend_request_route', recipient_id=user_data['user_id']) }}"
+  >
+    <button class="primary-button" type="submit" name="send_friend_request">
+      Add Friend
+    </button>
+  </form>
+  {% elif isFriends %}
+  <form
+    method="POST"
+    action="{{ url_for('delete_friend_route', friend_id=user_data['user_id']) }}"
+  >
+    <button class="primary-button danger-button">Unfriend</button>
+  </form>
+  {% elif isSelf %}
+  <button class="primary-button disabled" disabled>Your Profile</button>
+  {% endif %}
+</div>
+
+<div class="bucket-movie-card-wrapper">
+  {% if bucket_collection %}
+  <h6>{{username}}'s Bucket ⇘</h6>
+  {% else %} {% endif %} {% for movie in bucket_collection %}
+  <div class="bucket-movie-card">
+    {% if session["user_id"] == user_data["user_id"] %}
+    <form
+      method="POST"
+      action="{{ url_for('delete_from_bucket_route', movie_id=movie.id) }}"
+    >
+      <button class="delete-button" type="submit" name="delete_from_bucket">
+        X
+      </button>
+    </form>
+    {% endif %}
+    <a href="/movie/{{movie.id}}">
+      {% if movie.poster_path != None %}
+      <img src="https://image.tmdb.org/t/p/w780{{movie.poster_path}}" alt="" />
+      {% else %}
+      <img
+        height="225px"
+        src="/static/images/poster_not_found.jpg"
+        alt="Movie poster not found"
+      />
+      {% endif %}
+      <p>{{movie.title}}</p>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+<div class="users-interactions">
+  {% if interaction_collection %}
+  <h6>{{username}}'s Ratings ⇘</h6>
+  {% else %} {%endif%} {% for interaction in interaction_collection %}
+  <div class="interaction-card-wrapper">
+    <div class="interaction-card-left">
+      <a href="/movie/{{interaction.movie_id}}">
+        {% if interaction["poster_path"] %}
+        <img
+          src="https://image.tmdb.org/t/p/w780{{interaction.poster_path}}"
+          alt="{{interaction.title}} poster"
+        />
+        {% else %}
+        <img
+          src="/static/images/poster_not_found.jpg"
+          alt="poster not found image"
+        />
+        {% endif %}
+        <p>{{ interaction.title }}</p>
+      </a>
+    </div>
+    <div class="interaction-card-right">
+      {% if session["user_id"] == interaction["user_id"] %}
+      <form
+        method="POST"
+        action="{{ url_for('delete_interaction_route', users_interaction_id=interaction['users_interaction_id'], movie_id=interaction['movie_id']) }}"
+      >
+        <button class="delete-button" type="submit" name="delete-button">
+          X
+        </button>
+      </form>
+      {% endif %}
+      <p class="timestamp subtitle">{{interaction["timestamp"]}}</p>
+      <h6>
+        <a href='/user/{{interaction["username"]}}'
+          >{{ interaction["username"] }}
+        </a>
+      </h6>
+      <span class="subtitle"
+        >Rating:&nbsp&nbsp&nbsp&nbsp&nbsp {{ interaction["users_rating"]}}
+        <img src="/static/images/star.svg" alt="Star Icon"
+      /></span>
+      {% for para in interaction["comment"] %}
+      <p>{{para}}</p>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %} {% if isSelf %}
+  <button style="margin: 0 auto" class="primary-button danger-button">
+    <a href="/change_password">Change Password</a>
+  </button>
+  {% endif %}
+</div>
+{% endblock %}

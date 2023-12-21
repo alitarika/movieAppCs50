@@ -1,0 +1,293 @@
+{% extends "layout.html" %} {% block title %} {{ data.title }} {% endblock %} {%
+block main %}
+<div class="big-card-wrapper">
+  <form
+    method="POST"
+    action="{{ url_for('add_to_bucket_route', movie_id=movie_id) }}"
+  >
+    <button
+      class="primary-button"
+      type="submit"
+      name="add_to_bucket"
+      value="{{ movie_id }}"
+    >
+      Add to
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="1em"
+        viewBox="0 0 448 512"
+      >
+        <path
+          d="M96 152v8H48v-8C48 68.1 116.1 0 200 0h48c83.9 0 152 68.1 152 152v8H352v-8c0-57.4-46.6-104-104-104H200C142.6 48 96 94.6 96 152zM0 224c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32h-5.1L388.5 469c-2.6 24.4-23.2 43-47.7 43H107.2c-24.6 0-45.2-18.5-47.7-43L37.1 256H32c-17.7 0-32-14.3-32-32z"
+        />
+      </svg>
+    </button>
+  </form>
+  <div class="ratings">
+    <div>
+      <img src="/static/images/imdb.svg" alt="imdb rating" />
+      <p><span class="rate-num">{{ omdb.imdbRating }}</span> / 10</p>
+    </div>
+    <div>
+      <img src="/static/images/tmdb.svg" alt="tmdb rating" />
+      <p><span class="rate-num">{{ data.vote_average }}</span> / 10</p>
+    </div>
+    <div>
+      <img src="/static/images/Metacritic_logo.svg" alt="Metacritic rating" />
+      <p><span class="rate-num">{{ omdb.Metascore }}</span> / 100</p>
+    </div>
+  </div>
+  <canvas id="gradient-canvas"></canvas>
+  {% if data.backdrop_path != None %}
+  <img
+    class="big-card-bg-img"
+    src="https://image.tmdb.org/t/p/original{{data.backdrop_path}}"
+    alt="movie background image"
+  />
+  {% else %}
+  <img
+    class="big-card-bg-img"
+    src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2940&q=80"
+    alt="movie background image"
+  />
+
+  {% endif %} {% if data.poster_path != None %}
+  <img
+    class="big-card-img"
+    src="https://image.tmdb.org/t/p/original{{data.poster_path}}"
+    alt="Movie poster"
+  />
+  {% else %}
+  <img
+    class="big-card-img"
+    src="/static/images/poster_not_found.jpg"
+    alt="Movie poster not found"
+  />
+  {% endif %}
+  <div class="big-card-info">
+    <h1>
+      {{ data.title }}
+      <span>({{ data.original_title }})</span>
+    </h1>
+    <h6>{{ omdb["Year"] }} - {{ omdb["Genre"] }} - {{ omdb["Runtime"] }}</h6>
+    <p>{{ data.overview }}</p>
+  </div>
+</div>
+<div class="small-card-wrapper">
+  {% if directors %}
+  <h6>Director(s) ⇘</h6>
+  {% endif %}
+  <div class="small-card-section">
+    {% for director in directors %}
+    <div class="small-card">
+      <a href="/person/{{director.id}}">
+        {% if director.profile_path != None %}
+        <img
+          loading="lazy"
+          class="small-card-img"
+          src="https://image.tmdb.org/t/p/w780{{director.profile_path}}"
+          alt=""
+        />
+        {% else %}
+        <img
+          loading="lazy"
+          class="small-card-img"
+          src="/static/images/unknown-pp.png"
+          alt=""
+        />
+        {% endif %}
+        <p class="small-card-name">{{ director.name }}</p>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+  {% if writers %}
+  <h6>Writer(s) ⇘</h6>
+  {% endif %}
+  <div class="small-card-section">
+    {% for writer in writers %}
+    <div class="small-card">
+      <a href="/person/{{writer.id}}">
+        {% if writer.profile_path != None %}
+        <img
+          loading="lazy"
+          class="small-card-img"
+          src="https://image.tmdb.org/t/p/w780{{writer.profile_path}}"
+          alt=""
+        />
+        {% else %}
+        <img
+          class="small-card-img"
+          src="/static/images/unknown-pp.png"
+          alt=""
+          loading="lazy"
+        />
+        {% endif %}
+        <p class="small-card-name">{{ writer.name }}</p>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+  {% if actors %}
+  <h6>Cast ⇘</h6>
+  {% endif %}
+  <div class="small-card-section">
+    {% for actor in actors %}
+    <div class="small-card">
+      <a href="/person/{{actor.id}}">
+        {% if actor.profile_path != None %}
+        <img
+          class="small-card-img"
+          src="https://image.tmdb.org/t/p/w780{{actor.profile_path}}"
+          alt=""
+          loading="lazy"
+        />
+        {% else %}
+        <img
+          class="small-card-img"
+          src="/static/images/unknown-pp.png"
+          alt=""
+          loading="lazy"
+        />
+        {% endif %}
+        <p class="small-card-name">
+          {{ actor.name }} <br /><span>{{ actor.character }}</span>
+        </p>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% if session.get("user_id") %}
+<div class="interaction-form">
+  <form method="post">
+    <div class="form-group">
+      <h6>Your Rating ⇘</h6>
+      <div class="rating">
+        <input type="radio" name="users_rating" value="10" id="10" required />
+        <label for="10"
+          ><img
+            src="/static/images/star-empty.svg"
+            width="30"
+            height="30"
+            alt="Star Icon"
+        /></label>
+        <input type="radio" name="users_rating" value="9" id="9" required />
+        <label for="9"
+          ><img
+            src="/static/images/star-empty.svg"
+            width="30"
+            height="30"
+            alt="Star Icon"
+        /></label>
+        <input type="radio" name="users_rating" value="8" id="8" required />
+        <label for="8"
+          ><img
+            src="/static/images/star-empty.svg"
+            width="30"
+            height="30"
+            alt="Star Icon"
+        /></label>
+        <input type="radio" name="users_rating" value="7" id="7" required />
+        <label for="7"
+          ><img
+            src="/static/images/star-empty.svg"
+            width="30"
+            height="30"
+            alt="Star Icon"
+        /></label>
+        <input type="radio" name="users_rating" value="6" id="6" required />
+        <label for="6"
+          ><img
+            src="/static/images/star-empty.svg"
+            width="30"
+            height="30"
+            alt="Star Icon"
+        /></label>
+        <input type="radio" name="users_rating" value="5" id="5" required />
+        <label for="5"
+          ><img
+            src="/static/images/star-empty.svg"
+            width="30"
+            height="30"
+            alt="Star Icon"
+        /></label>
+        <input type="radio" name="users_rating" value="4" id="4" required />
+        <label for="4"
+          ><img
+            src="/static/images/star-empty.svg"
+            width="30"
+            height="30"
+            alt="Star Icon"
+        /></label>
+        <input type="radio" name="users_rating" value="3" id="3" required />
+        <label for="3"
+          ><img
+            src="/static/images/star-empty.svg"
+            width="30"
+            height="30"
+            alt="Star Icon"
+        /></label>
+        <input type="radio" name="users_rating" value="2" id="2" required />
+        <label for="2"
+          ><img
+            src="/static/images/star-empty.svg"
+            width="30"
+            height="30"
+            alt="Star Icon"
+        /></label>
+        <input type="radio" name="users_rating" value="1" id="1" required />
+        <label for="1"
+          ><img
+            src="/static/images/star-empty.svg"
+            width="30"
+            height="30"
+            alt="Star Icon"
+        /></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="users_rating"></label>
+      <textarea
+        placeholder="Your comment on the movie."
+        name="comment"
+        rows="10"
+        required
+      ></textarea>
+      <button class="primary-button" type="submit">Submit</button>
+    </div>
+  </form>
+</div>
+<div class="friends-interactions">
+  {% if interactions %}
+  <h6>Your Friend's Ratings ⇘</h6>
+  {% else %} {% endif %} {% for interaction in interactions %}
+  <div class="interaction-card">
+    {% if username == interaction["username"] %}
+    <form
+      method="POST"
+      action="{{ url_for('delete_interaction_route', users_interaction_id=interaction['users_interaction_id'], movie_id=movie_id) }}"
+    >
+      <button class="delete-button" type="submit" name="delete-button">
+        X
+      </button>
+    </form>
+    {% endif %}
+    <p class="timestamp subtitle">{{interaction["timestamp"]}}</p>
+    <h6>
+      <a href='/user/{{interaction["username"]}}'
+        >{{ interaction["username"] }}
+      </a>
+    </h6>
+    <span class="subtitle"
+      >Rating:&nbsp&nbsp&nbsp&nbsp&nbsp {{ interaction["users_rating"]}}
+      <img src="/static/images/star.svg" alt="Star Icon"
+    /></span>
+    {% for para in interaction["comment"] %}
+    <p>{{para}}</p>
+    {% endfor %}
+  </div>
+
+  {% endfor %}
+</div>
+{% endif %} {% endblock %}

@@ -1,0 +1,19 @@
+{% extends "layout.html" %} {% block title %} Search Friend {% endblock %} {%
+block main %}
+<div class="login-register-form">
+  <form method="post">
+    <h1>Search Friend</h1>
+    <label for="friend_query">Friend's username:</label>
+    <input
+      autofocus
+      autocomplete="off"
+      placeholder="Friend's username"
+      name="friend_query"
+      id="friend_query"
+      type="text"
+      required
+    />
+    <button type="submit">Search</button>
+  </form>
+</div>
+{% endblock %}

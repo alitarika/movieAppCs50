@@ -1,0 +1,107 @@
+{% extends "layout.html" %} {% block title %} {{person_details.name}} {%
+endblock %} {% block main %}
+
+<div class="big-card-wrapper">
+  <div class="ratings">
+    <div>
+      <img src="/static/images/tmdb.svg" alt="imdb rating" />
+      <p>
+        <span class="rate-num">{{ person_details.popularity }}</span> popularity
+      </p>
+    </div>
+  </div>
+  <canvas id="gradient-canvas"></canvas>
+  {% if person_details.profile_path != None %}
+  <img
+    class="big-card-img"
+    src="https://image.tmdb.org/t/p/original{{person_details.profile_path}}"
+    alt="Movie poster"
+  />
+  {% else %}
+  <img
+    class="big-card-img"
+    src="/static/images/unknown-pp.png"
+    alt="Movie poster not found"
+  />
+  {% endif %}
+  <div class="big-card-info">
+    <h1>
+      {{ person_details.name }} {% if person_details["also_known_as"] %}
+      <span>({{ person_details["also_known_as"][0] }})</span>
+      {% endif %}
+    </h1>
+    <h6>
+      {% if person_details["place_of_birth"] %}{{
+      person_details["place_of_birth"] }} {% endif %} {% if
+      person_details["birthday"] %} - {{ person_details["birthday"] }} {% endif
+      %} {% if person_details["deathday"] %} - {{ person_details["deathday"] }}
+      {% endif %}
+    </h6>
+    {% for para in biography_block %}
+    <p>{{para}}</p>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="small-card-wrapper">
+  {% if person_credits["cast"]%}
+  <h6>In Cast ⇘</h6>
+  {% endif %}
+  <div class="small-card-section">
+    {% for movie in person_credits["cast"] %}
+    <div class="small-card">
+      <a href="/movie/{{movie.id}}">
+        {% if movie.poster_path != None %}
+        <img
+          class="small-card-img"
+          src="https://image.tmdb.org/t/p/w780{{movie.poster_path}}"
+          alt=""
+        />
+        {% else %}
+        <img
+          class="small-card-img"
+          src="/static/images/poster_not_found.jpg"
+          alt=""
+        />
+        {% endif %}
+        <p class="small-card-name">
+          {{ movie.title }} <br />
+          <span>{{ movie.character }}</span>
+        </p>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="small-card-wrapper">
+  {% if person_credits["crew"] %}
+  <h6>In Crew ⇘</h6>
+  {% endif %}
+  <div class="small-card-section">
+    {% for movie in person_credits["crew"] %}
+    <div class="small-card">
+      <a href="/movie/{{movie.id}}">
+        {% if movie.poster_path != None %}
+        <img
+          class="small-card-img"
+          src="https://image.tmdb.org/t/p/w780{{movie.poster_path}}"
+          alt=""
+        />
+        {% else %}
+        <img
+          class="small-card-img"
+          src="/static/images/poster_not_found.jpg"
+          alt=""
+        />
+        {% endif %}
+        <p class="small-card-name">
+          {{ movie.title }} <br />
+          <span>{{ movie.job }}</span>
+        </p>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

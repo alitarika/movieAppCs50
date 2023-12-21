@@ -1,0 +1,41 @@
+{% extends "layout.html" %} {% block title %} My Bucket {% endblock %} {% block
+main %} {% if collection %}
+<div class="bucket-movie-card-wrapper">
+  <h6>Your Bucket ⇘</h6>
+  {% for movie in collection %}
+  <div class="bucket-movie-card">
+    <a href="/movie/{{movie.id}}">
+      {% if movie.poster_path != None %}
+      <img src="https://image.tmdb.org/t/p/w780{{movie.poster_path}}" alt="" />
+      {% else %}
+      <img
+        height="225px"
+        src="/static/images/poster_not_found.jpg"
+        alt="Movie poster not found"
+      />
+      {% endif %}
+      <p>{{movie.title}}</p>
+    </a>
+    <form
+      method="POST"
+      action="{{ url_for('delete_from_bucket_route', movie_id=movie.id) }}"
+    >
+      <button class="delete-button" type="submit" name="delete_from_bucket">
+        X
+      </button>
+    </form>
+  </div>
+  {% endfor %}
+</div>
+<form
+  class="empty-bucket-form"
+  method="POST"
+  action="{{ url_for('empty_bucket_route') }}"
+>
+  <button class="primary-button" type="submit" name="empty_bucket">
+    Empty Bucket
+  </button>
+</form>
+{% else %}
+<p style="text-align: center">Your bucket is empty.</p>
+{% endif %} {% endblock %}

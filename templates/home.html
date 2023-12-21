@@ -1,0 +1,50 @@
+{% extends "layout.html" %} {% block title %} Home {% endblock %} {% block main
+%}
+<div class="users-interactions">
+  {% for interaction in collection %} {% if interaction["comment"] %}
+  <div class="interaction-card-wrapper">
+    <div class="interaction-card-left">
+      <a href="/movie/{{ interaction.movie_id }}">
+        {% if interaction["poster_path"] %}
+        <img
+          src="https://image.tmdb.org/t/p/w780{{ interaction.poster_path }}"
+          alt="{{ interaction.title }} poster"
+        />
+        {% else %}
+        <img
+          src="/static/images/poster_not_found.jpg"
+          alt="poster not found image"
+        />
+        {% endif %}
+        <p>{{ interaction.title }}</p>
+      </a>
+    </div>
+    <div class="interaction-card-right">
+      {% if session["user_id"] == interaction["user_id"] %}
+      <form
+        method="POST"
+        action="{{ url_for('delete_interaction_route', users_interaction_id=interaction['users_interaction_id'], movie_id=interaction['movie_id']) }}"
+      >
+        <button class="delete-button" type="submit" name="delete-button">
+          X
+        </button>
+      </form>
+      {% endif %}
+      <p class="timestamp subtitle">{{ interaction["timestamp"] }}</p>
+      <h6>
+        <a href='/user/{{ interaction["username"] }}'
+          >{{ interaction["username"] }}</a
+        >
+      </h6>
+      <span class="subtitle"
+        >Rating:&nbsp&nbsp&nbsp&nbsp&nbsp {{ interaction["users_rating"] }}
+        <img src="/static/images/star.svg" alt="Star Icon"
+      /></span>
+      {% for para in interaction["comment"] %}
+      <p>{{ para }}</p>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %} {% endfor %}
+</div>
+{% endblock %}

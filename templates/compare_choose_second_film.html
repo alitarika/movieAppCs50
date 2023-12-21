@@ -1,0 +1,24 @@
+{% extends "layout.html" %} {% block title %} Compare Movies {% endblock %} {%
+block main %} {% if collection %}
+<div class="bucket-movie-card-wrapper">
+  <h6>Choose the second film to compare ⇘</h6>
+  {% for movie in collection %}
+  <div class="bucket-movie-card">
+    <a href="/compare/{{movie_id1}}/{{movie.id}}">
+      {% if movie.poster_path != None %}
+      <img src="https://image.tmdb.org/t/p/w780{{movie.poster_path}}" alt="" />
+      {% else %}
+      <img
+        height="225px"
+        src="/static/images/poster_not_found.jpg"
+        alt="Movie poster not found"
+      />
+      {% endif %}
+      <p>{{movie.title}}</p>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p style="text-align: center">Your bucket is empty.</p>
+{% endif %} {% endblock %}

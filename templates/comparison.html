@@ -1,0 +1,186 @@
+{% extends "layout.html" %} {% block title %} {{ movie_data1.title }} vs {{
+movie_data2.title }} {% endblock %} {% block main %}
+
+<div class="comparison-wrapper">
+  <div class="movie-wrapper">
+    <div class="big-card-wrapper">
+      {% if movie_data1.backdrop_path != None %}
+      <img
+        class="big-card-bg-img"
+        src="https://image.tmdb.org/t/p/original{{movie_data1.backdrop_path}}"
+        alt="movie background image"
+      />
+      {% else %}
+      <img
+        class="big-card-bg-img"
+        src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2940&q=80"
+        alt="movie background image"
+      />
+
+      {% endif %} {% if movie_data1.poster_path != None %}
+      <img
+        class="big-card-img"
+        src="https://image.tmdb.org/t/p/original{{movie_data1.poster_path}}"
+        alt="Movie poster"
+      />
+      {% else %}
+      <img
+        class="big-card-img"
+        src="/static/images/poster_not_found.jpg"
+        alt="Movie poster not found"
+      />
+      {% endif %}
+
+      <div class="big-card-info">
+        <h1>{{ movie_data1.title }}</h1>
+        <h6>
+          {{ omdb_data1["Year"] }} - {{ omdb_data1["Genre"] }} - {{
+          omdb_data1["Runtime"] }}
+        </h6>
+      </div>
+    </div>
+    <div class="comparison-row-element">
+      <p>
+        {% if omdb_data1.Awards %} {{omdb_data1.Awards}} {% else %} N/A {% endif
+        %}
+      </p>
+    </div>
+    <div class="comparison-row-element">
+      <p>Popularity: {{movie_data1.popularity}}</p>
+    </div>
+    <div class="comparison-row-element">
+      <p>
+        {% if omdb_data1.imdbRating %} {{omdb_data1.imdbRating}} {% else %} N/A
+        {% endif %}
+        <img src="/static/images/imdb.svg" alt="imdb rating" />
+      </p>
+    </div>
+    <div class="comparison-row-element">
+      <p>
+        {{movie_data1.vote_average}}<img
+          src="/static/images/tmdb.svg"
+          alt="tmdb rating"
+        />
+      </p>
+    </div>
+    <div class="comparison-row-element">
+      <p>
+        {% if omdb_data1.Metascore %} {{ omdb_data1.Metascore }} {% else %} N/A
+        {% endif %}
+        <img src="/static/images/Metacritic_logo.svg" alt="Metacritic rating" />
+      </p>
+    </div>
+    <div class="comparison-row-element">
+      <p>
+        {% if omdb_data1.Ratings %} {% if omdb_data1.Ratings[1] %} {{
+        omdb_data1.Ratings[1]["Value"]}} {% else %} N/A {% endif %} {% else %}
+        N/A {% endif %}
+        <img
+          src="/static/images/Rotten_Tomatoes_logo.svg"
+          alt="rotten tomatoes rating"
+        />
+      </p>
+    </div>
+    <div class="comparison-row-element">
+      <p>
+        {% if omdb_data1.Director %} Directed by {{omdb_data1.Director}} {% else
+        %} N/A {% endif %}
+      </p>
+    </div>
+    <div class="comparison-row-element">
+      <p>Plot: {{movie_data1.overview}}</p>
+    </div>
+  </div>
+  <div class="movie-wrapper">
+    <div class="big-card-wrapper">
+      {% if movie_data2.backdrop_path != None %}
+      <img
+        class="big-card-bg-img"
+        src="https://image.tmdb.org/t/p/original{{movie_data2.backdrop_path}}"
+        alt="movie background image"
+      />
+      {% else %}
+      <img
+        class="big-card-bg-img"
+        src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2940&q=80"
+        alt="movie background image"
+      />
+
+      {% endif %} {% if movie_data2.poster_path != None %}
+      <img
+        class="big-card-img"
+        src="https://image.tmdb.org/t/p/original{{movie_data2.poster_path}}"
+        alt="Movie poster"
+      />
+      {% else %}
+      <img
+        class="big-card-img"
+        src="/static/images/poster_not_found.jpg"
+        alt="Movie poster not found"
+      />
+      {% endif %}
+
+      <div class="big-card-info">
+        <h1>{{ movie_data2.title }}</h1>
+        <h6>
+          {{ omdb_data2["Year"] }} - {{ omdb_data2["Genre"] }} - {{
+          omdb_data2["Runtime"] }}
+        </h6>
+      </div>
+    </div>
+
+    <div class="comparison-row-element">
+      <p>
+        {% if omdb_data2.Awards %} {{omdb_data2.Awards}} {% else %} N/A {% endif
+        %}
+      </p>
+    </div>
+    <div class="comparison-row-element">
+      <p>Popularity: {{movie_data2.popularity}}</p>
+    </div>
+    <div class="comparison-row-element">
+      <p>
+        {% if omdb_data2.imdbRating %} {{omdb_data2.imdbRating}} {% else %} N/A
+        {% endif %}
+        <img src="/static/images/imdb.svg" alt="imdb rating" />
+      </p>
+    </div>
+    <div class="comparison-row-element">
+      <p>
+        {{movie_data2.vote_average}}<img
+          src="/static/images/tmdb.svg"
+          alt="tmdb rating"
+        />
+      </p>
+    </div>
+    <div class="comparison-row-element">
+      <p>
+        {% if omdb_data2.Metascore %} {{ omdb_data2.Metascore}} {% else %} N/A
+        {% endif %}
+        <img src="/static/images/Metacritic_logo.svg" alt="Metacritic rating" />
+      </p>
+    </div>
+
+    <div class="comparison-row-element">
+      <p>
+        {% if omdb_data2.Ratings %} {% if omdb_data2.Ratings[1] %} {{
+        omdb_data2.Ratings[1]["Value"]}} {% else %} N/A {% endif %} {% else %}
+        N/A {% endif %}
+        <img
+          src="/static/images/Rotten_Tomatoes_logo.svg"
+          alt="rotten tomatoes rating"
+        />
+      </p>
+    </div>
+    <div class="comparison-row-element">
+      <p>
+        {% if omdb_data2.Director %} Directed by {{omdb_data2.Director}} {% else
+        %} N/A {% endif %}
+      </p>
+    </div>
+    <div class="comparison-row-element">
+      <p>Plot: {{movie_data2.overview}}</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

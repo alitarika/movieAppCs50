@@ -1,0 +1,30 @@
+{% extends "layout.html" %} {% block title %} Results for {{user_query}} {%
+endblock %} {% block main %}
+<div class="small-card-wrapper">
+  {% if movie_data %}
+  <h6>Results for "{{user_query}}" ⇘</h6>
+  {% endif %}
+  <div class="small-card-section">
+    {% for movie in movie_data %}
+    <div class="small-card">
+      <a href="/movie/{{movie.id}}">
+        {% if movie.poster_path != None %}
+        <img
+          class="small-card-img"
+          src="https://image.tmdb.org/t/p/w780{{movie.poster_path}}"
+          alt=""
+        />
+        {% else %}
+        <img
+          class="small-card-img"
+          src="/static/images/poster_not_found.jpg"
+          alt=""
+        />
+        {% endif %}
+        <p class="small-card-name">{{ movie.title }} <br /></p>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

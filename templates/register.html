@@ -1,0 +1,35 @@
+{% extends "layout.html" %} {% block title %} Register {% endblock %} {% block
+main %}
+<div class="login-register-form">
+  <form action="/register" method="post">
+    <h1>Register</h1>
+    <label for="username">Username:</label>
+    <input
+      autofocus
+      autocomplete="off"
+      placeholder="Username"
+      name="username"
+      id="username"
+      type="text"
+    />
+    <label for="password">Password:</label>
+    <input
+      placeholder="Password"
+      autocomplete="off"
+      name="password"
+      id="password"
+      type="password"
+    />
+    <label for="confirmation">Confirmation:</label>
+    <input
+      placeholder="Confirm Password"
+      autocomplete="off"
+      name="confirmation"
+      id="confirmation"
+      type="password"
+    />
+    <button type="submit">Register</button>
+    <p>Already a member? <a href="/login">Log In</a> here!</p>
+  </form>
+</div>
+{% endblock %}

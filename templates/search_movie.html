@@ -1,0 +1,20 @@
+{% extends "layout.html" %} {% block title %} Search Movie {% endblock %} {%
+block main %}
+
+<div class="login-register-form">
+  <form method="post">
+    <h1>Search Movie</h1>
+    <label for="movie_title">Movie Title:</label>
+    <input
+      autofocus
+      autocomplete="off"
+      placeholder="Movie Title"
+      name="movie_title"
+      id="movie_title"
+      type="text"
+      required
+    />
+    <button type="submit">Search</button>
+  </form>
+</div>
+{% endblock %}

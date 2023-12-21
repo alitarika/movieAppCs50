@@ -1,0 +1,62 @@
+{% extends "layout.html" %} {% block title %} {{ username }}'s friends {%
+endblock %} {% block main %} {% if friends %}
+<div class="friend-card-wrapper">
+  <h6>{{ username }}'s friends ⇘</h6>
+  {% for friend in friends %}
+  <div class="friend-card">
+    <div class="friend-card-left">
+      <p>
+        <a href="/user/{{friend['friend_username']}}"
+          >{{friend["friend_username"]}}</a
+        >
+      </p>
+      <p>{{friend["friend_count"]}} friends</p>
+      <p>{{friend["interaction_count"]}} ratings</p>
+    </div>
+
+    <div class="friend-card-right">
+      {% if friend["last_interaction_movie_id"]%}
+      <a href="/movie/{{friend['last_interaction_movie_id']}}">
+        {% if friend["last_interaction_poster_path"] != None %}
+        <img
+          src="https://image.tmdb.org/t/p/w780{{friend['last_interaction_poster_path']}}"
+          alt=""
+        />
+        {% else %}
+        <img
+          src="/static/images/poster_not_found.jpg"
+          alt="Movie poster not found"
+        />
+        {% endif %}
+        <p class="last-rating-header">
+          {{friend["friend_username"]}}'s Last Rating:
+        </p>
+        <p>{{friend["last_interaction_movie_title"]}}</p>
+        <p class="friend-card-right-rating">
+          Rating:
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="crimson"
+            role="presentation"
+          >
+            <path
+              d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"
+            ></path>
+          </svg>
+          {{ friend["last_interaction_users_rating"] }}
+        </p>
+      </a>
+      {% else %}
+      <p class="last-rating-header">No ratings yet.</p>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p style="text-align: center">
+  No user is found with this username. You can search for friends again by
+  clicking <a href="/search_friend">here.</a>
+</p>
+{% endif %} {% endblock %}
